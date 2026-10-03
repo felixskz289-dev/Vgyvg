@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Весёлый китайский · Урок «Мой дом и сад» — 2 часа · упор на иероглифы</title>
+<style>
+:root{
+  --bg:#fff7f0; --card:#ffffff; --ink:#3d2c29; --accent:#e8544a;
+  --accent2:#f6a35c; --green:#7fb069; --blue:#5b8fd6; --purple:#9b72cf;
+  --shadow:0 8px 24px rgba(120,70,40,.12); --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:linear-gradient(135deg,#e8544a,#f6a35c);color:#fff;padding:26px 20px;text-align:center}
+header h1{font-size:1.7rem}
+header p{opacity:.92;margin-top:6px}
+.wrap{max-width:960px;margin:0 auto;padding:20px}
+.plan{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.plan span{background:#fff;border:2px solid var(--accent2);border-radius:999px;padding:4px 14px;font-size:.85rem;cursor:pointer;transition:.2s}
+.plan span.done{background:var(--green);border-color:var(--green);color:#fff;text-decoration:line-through}
+#clock{text-align:center;font-size:1.3rem;font-weight:700;color:var(--accent);margin:6px 0 2px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:18px 0}
+.tab{border:none;background:#fff;color:var(--ink);padding:10px 18px;border-radius:999px;font-size:.95rem;cursor:pointer;box-shadow:var(--shadow);transition:.2s;font-weight:600}
+.tab.active{background:var(--accent);color:#fff;transform:scale(1.05)}
+.panel{display:none}
+.panel.active{display:block;animation:fade .35s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:18px}
+h2{color:var(--accent);margin-bottom:10px}
+h3{color:var(--purple);margin:16px 0 8px}
+.muted{color:#8a7a75;font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.word{background:#fff;border:2px solid #f3e3d8;border-radius:16px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.word:hover{transform:translateY(-4px);border-color:var(--accent2)}
+.word .hanzi{font-size:2.4rem;font-weight:700}
+.word .py{color:var(--blue);font-size:1.05rem;margin:4px 0}
+.word .ru{color:var(--green);font-weight:600}
+.speak-btn{margin-top:8px;background:var(--blue);color:#fff;border:none;border-radius:999px;padding:6px 16px;cursor:pointer;font-size:.9rem}
+.dialogue{background:#fdf3e7;border-left:5px solid var(--accent2);border-radius:12px;padding:14px 18px;margin:10px 0}
+.dialogue b{color:var(--accent)}
+/* ===== ЛЕСЕНКА ===== */
+.word-picker{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.wp{border:2px solid #eee0d6;background:#fff;border-radius:12px;padding:8px 14px;cursor:pointer;font-size:1.05rem;font-weight:700;transition:.15s}
+.wp small{display:block;font-weight:400;color:var(--green);font-size:.75rem}
+.wp.on{border-color:var(--purple);background:#f4edfb;transform:scale(1.06)}
+.staircase{display:flex;flex-direction:column;gap:6px;margin:16px 0;align-items:flex-start}
+.rung{background:#fff;border:2px solid var(--accent2);border-radius:14px;padding:10px 18px;cursor:pointer;transition:.15s;max-width:100%}
+.rung:hover{transform:translateX(8px);border-color:var(--accent)}
+.rung .hz{font-size:1.5rem;font-weight:700}
+.rung .meta{color:var(--blue);font-size:.95rem}
+.rung .tr{color:var(--green);font-size:.9rem}
+.rung .lvl{display:inline-block;background:var(--accent);color:#fff;border-radius:999px;font-size:.7rem;padding:1px 8px;margin-right:8px;vertical-align:middle}
+/* визуальная лесенка: каждая ступень шире */
+.rung:nth-child(1){margin-left:0}.rung:nth-child(2){margin-left:24px}.rung:nth-child(3){margin-left:48px}
+.rung:nth-child(4){margin-left:72px}.rung:nth-child(5){margin-left:96px}.rung:nth-child(6){margin-left:120px}
+.rung:nth-child(7){margin-left:144px}.rung:nth-child(8){margin-left:168px}
+.rung.missed{border-color:var(--accent);background:#fdecea}
+.rung.ok{border-color:var(--green);background:#e9f6e6}
+.build-zone{background:#fbf6f1;border:2px dashed var(--purple);border-radius:14px;padding:12px;min-height:60px;margin:10px 0}
+.chip{display:inline-block;background:#fff;border:2px solid var(--accent2);border-radius:999px;padding:6px 16px;margin:4px;cursor:pointer;font-size:1.05rem;font-weight:600;transition:.15s}
+.chip:hover{transform:scale(1.06)}
+.chip .py2{color:var(--blue);font-size:.8rem;font-weight:400}
+.trace-box{position:relative;width:260px;height:260px;background:repeating-linear-gradient(#fff,#fff 25px,#ffe9dd 26px);border:3px solid var(--accent2);border-radius:14px;touch-action:none;margin-top:12px}
+.trace-box .sample{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:180px;color:rgba(232,84,74,.18);font-family:"KaiTi","STKaiti",serif;pointer-events:none}
+.trace-box canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.btn{border:none;border-radius:999px;padding:10px 20px;font-size:.95rem;cursor:pointer;font-weight:600;margin:4px 4px 4px 0;transition:.15s}
+.btn:hover{transform:scale(1.04)}
+.btn.red{background:var(--accent);color:#fff}.btn.green{background:var(--green);color:#fff}
+.btn.blue{background:var(--blue);color:#fff}.btn.grey{background:#e8ded9;color:var(--ink)}.btn.purple{background:var(--purple);color:#fff}
+.q{margin:14px 0;padding:14px;border-radius:12px;background:#fbf6f1;border:1px solid #f0e2d8}
+.q .head{font-weight:600;margin-bottom:8px}
+.opt{display:block;margin:6px 0;padding:9px 14px;background:#fff;border:2px solid #eee0d6;border-radius:10px;cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--accent2)}
+.opt.correct{background:#e5f4e3;border-color:var(--green)}
+.opt.wrong{background:#fde8e6;border-color:var(--accent)}
+.match-row{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}
+.match-col{flex:1;min-width:160px}
+.match-item{padding:10px 14px;border-radius:10px;border:2px solid #eee0d6;background:#fff;margin:6px 0;cursor:pointer;text-align:center;font-size:1.1rem;transition:.15s}
+.match-item.sel{border-color:var(--blue);background:#eaf2fc}
+.match-item.ok{border-color:var(--green);background:#e5f4e3;pointer-events:none}
+input.fill{border:none;border-bottom:2px solid var(--accent2);background:transparent;font-size:1.05rem;padding:2px 8px;text-align:center;width:200px;outline:none}
+input.fill:focus{border-color:var(--accent)}
+.score{font-size:1.2rem;font-weight:700;color:var(--green)}
+#progressBar{height:12px;background:#f0e2d8;border-radius:999px;overflow:hidden;margin:10px 0}
+#progressFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--accent2));transition:width .4s}
+.cert{text-align:center;background:linear-gradient(135deg,#fff8e7,#fdeef0);border:3px dashed var(--accent2);border-radius:18px;padding:30px;display:none}
+.cert h2{color:var(--purple)}
+.chars-strip{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chars-strip span{background:#fff;border:2px solid #f3e3d8;border-radius:10px;padding:4px 10px;font-size:1.3rem;cursor:pointer;transition:.15s}
+.chars-strip span:hover{border-color:var(--accent);transform:scale(1.1)}
+@media(max-width:600px){.rung:nth-child(n){margin-left:0}.trace-box{width:220px;height:220px}.trace-box .sample{font-size:150px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏡 Мой дом и сад · 我的房间和花园</h1>
+  <p>Интерактивный урок · 2 часа · главный упор — иероглифы и лесенки словосочетаний</p>
+</header>
+<div class="wrap">
+  <div id="clock">⏱ 120:00</div>
+  <div class="plan" id="plan"></div>
+  <div id="progressBar"><div id="progressFill"></div></div>
+  <p class="muted" style="text-align:center">Прогресс урока: <span id="progressPct">0</span>%</p>
+
+  <div class="tabs">
+    <button class="tab active" data-p="p0">📋 План</button>
+    <button class="tab" data-p="p1">🗣 Слова</button>
+    <button class="tab" data-p="p2">💬 Диалоги</button>
+    <button class="tab active" data-p="p3" style="display:none"></button>
+    <button class="tab" data-p="p3b">🪜 Лесенки</button>
+    <button class="tab" data-p="p3c">✍️ Прописи</button>
+    <button class="tab" data-p="p4">🎯 Задания</button>
+    <button class="tab" data-p="p5">🏆 Финал</button>
+  </div>
+
+  <!-- ПЛАН -->
+  <section class="panel active" id="p0"><div class="card">
+    <h2>План урока на 2 часа (120 минут)</h2>
+    <p class="muted">Отмечайте выполненные этапы — сверху они зачёркиваются.</p>
+    <div id="planList"></div>
+    <h3>Иероглифы урока (12 штук) — нажми, чтобы услышать</h3>
+    <div class="chars-strip" id="charsStrip"></div>
+    <p>К каждому иероглифу — своя лесенка: от одного слога к полному предложению.</p>
+  </div></section>
+
+  <!-- СЛОВА -->
+  <section class="panel" id="p1"><div class="card">
+    <h2>New Words · 生词</h2>
+    <p class="muted">Нажмите на карточку или 🔊 — услышите произношение.</p>
+    <div class="grid" id="wordsGrid"></div>
+    <h3>Из каких иероглифов состоит слово? (нажми на иероглиф в карточке, чтобы разобрать слово)</h3>
+    <div class="q"><div class="head" id="decomp-head"></div><div id="decomp-body"></div><p id="decomp-msg"></p></div>
+    <h3>Флэшкарты: угадай слово</h3>
+    <div class="q"><div class="head" id="fl-head"></div><div id="fl-opts"></div><p id="fl-msg"></p></div>
+  </div></section>
+
+  <!-- ДИАЛОГИ -->
+  <section class="panel" id="p2"><div class="card">
+    <h2>Диалоги и тексты · Read aloud</h2>
+    <p class="muted">Прочитайте вслух, затем нажмите 🔊 и повторите за диктором, обращая внимание на иероглифы.</p>
+    <div class="dialogue"><b>A:</b> 你家的花园里有很多花！<br><b>B:</b> 我爸爸、妈妈喜欢花。</div>
+    <div class="dialogue"><b>A:</b> 你家的花园真漂亮！<br><b>B:</b> 谢谢！</div>
+    <div class="dialogue"><b>A:</b> 这是我的房间。我的房间里有床、书桌、椅子、书架。书桌上有电脑。书架上有很多书。我的书架很整齐。我的房间很干净。我喜欢我的房间。</div>
+    <button class="btn blue" onclick="speak('你家的花园里有很多花。你家的花园真漂亮。谢谢。这是我的房间。我的房间里有床、书桌、椅子、书架。书桌上有电脑。书架上有很多书。我的书架很整齐。我的房间很干净。我喜欢我的房间。')">🔊 Озвучить весь текст</button>
+    <h3>Образцы предложений · Sentence Patterns</h3>
+    <div class="dialogue">1. 你家的花园真漂亮！ — Какой красивый у тебя сад!</div>
+    <div class="dialogue">2. 我家的花园里有很多花。 — В саду моего дома много цветов.</div>
+    <div class="dialogue">3. 我爸爸、妈妈喜欢花。 — Мои папа и мама любят цветы.</div>
+    <div class="dialogue">4. 我的书桌很干净。 — Мой письменный стол очень чистый.</div>
+    <div class="dialogue">5. 姐姐的书架上有很多中文书。 — На книжной полке сестры много китайских книг.</div>
+    <p class="muted" style="margin-top:10px">Иероглиф-ключи урока: 宀 (крыша — 家), 艹 (трава — 花/花园), 木 (дерево — 桌/书架), 氵(вода — 干净), ⺮ (бамбук — 整齐), 目 (глаз — 真).</p>
+  </div></section>
+
+  <!-- ЛЕСЕНКИ -->
+  <section class="panel" id="p3b"><div class="card">
+    <h2>🪜 Лесенки словосочетаний к иероглифам</h2>
+    <p class="muted">Выбери иероглиф/слово. Каждая ступень добавляет один элемент — от иероглифа до целого предложения. Нажимай на ступень, чтобы услышать её. Затем собери лесенку сам: нажимай чипы от простого к сложному.</p>
+    <div class="word-picker" id="wordPicker"></div>
+    <div class="staircase" id="staircase"></div>
+    <button class="btn purple" id="btnListenAll">🔊 Прослушать всю лесенку</button>
+    <h3>Собери лесенку: нажимай чипы от простого к сложному</h3>
+    <div class="build-zone" id="buildZone"><span class="muted">Здесь появятся собранные ступени…</span></div>
+    <div id="buildChips"></div>
+    <p id="buildMsg"></p>
+    <p>Очки лесенок: <span class="score" id="ladderScore">0</span></p>
+  </div></section>
+
+  <!-- ПРОПИСИ -->
+  <section class="panel" id="p3c"><div class="card">
+    <h2>✍️ Прописи: пишем иероглифы</h2>
+    <p class="muted">Обведи образец мышью или пальцем. Кнопка «Показать шаг» приближает образец по одному штриху.</p>
+    <div class="word-picker" id="charPicker"></div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <div>
+        <div class="trace-box"><div class="sample" id="sampleChar"></div><canvas id="traceCanvas" width="260" height="260"></canvas></div>
+        <div style="margin-top:8px">
+          <button class="btn green" id="btnStep">🪜 Показать шаг</button>
+          <button class="btn grey" onclick="clearCanvas()">🧽 Стереть</button>
+        </div>
+      </div>
+      <div style="flex:1;min-width:220px">
+        <div style="font-size:2.6rem;font-weight:700" id="infoChar"></div>
+        <p><b id="infoPy"></b></p>
+        <p id="infoRu"></p>
+        <p>Штрихов: <b id="infoStrokes"></b> · Шагов выполнено: <b id="stepCount">0</b></p>
+        <div class="q"><div class="head">Сколько штрихов в этом иероглифе?</div>
+          <div id="strokeQuiz"></div><p id="strokeMsg"></p></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ЗАДАНИЯ -->
+  <section class="panel" id="p4"><div class="card">
+    <h2>🎯 Задания</h2>
+    <h3>Задание 1. Соедини китайское и английское</h3>
+    <div class="match-row"><div class="match-col" id="matchCn"></div><div class="match-col" id="matchEn"></div></div>
+    <p id="matchMsg"></p>
+    <h3>Задание 2. ✓ или ✗ — выбери правильное (по тексту про комнату)</h3>
+    <div id="quizTF"></div>
+    <h3>Задание 3. Перевод на китайский</h3>
+    <div id="quizTrans"></div>
+    <h3>Задание 4. Собери предложение из иероглифов (порядок слов)</h3>
+    <div id="quizOrder"></div>
+    <h3>Задание 5. Вставь пропуски в диалоги</h3>
+    <div class="q">
+      <div class="head">A: 这是我的 <input class="fill" id="f31" placeholder="…">。<br>B: 你的 <input class="fill" id="f32" placeholder="…"> 真整齐！<br>A: 谢谢！我的书架上有电脑。</div>
+      <p id="fillMsg3"></p><button class="btn red" onclick="checkFill3()">Проверить</button>
+    </div>
+    <div class="q">
+      <div class="head">A: 这是我的花园。<br>B: <input class="fill" id="f41" placeholder="…">！<br>A: <input class="fill" id="f42" placeholder="…">！我喜欢花。</div>
+      <p id="fillMsg4"></p><button class="btn red" onclick="checkFill4()">Проверить</button>
+    </div>
+    <p style="margin-top:12px">Очки заданий: <span class="score" id="taskScore">0</span></p>
+  </div></section>
+
+  <!-- ФИНАЛ -->
+  <section class="panel" id="p5"><div class="card">
+    <h2>🏆 Финальный тест (12 вопросов)</h2>
+    <div id="finalQuiz"></div>
+    <p>Результат: <span class="score" id="finalScore">0</span> / 12</p>
+    <div class="cert" id="cert">
+      <h2>🎉 Поздравляем! 恭喜！</h2>
+      <p>Урок пройден! Ты знаешь 12 иероглифов и умеешь строить лесенки словосочетаний!</p>
+      <p style="font-size:1.4rem;margin-top:8px">你家的花园真漂亮！</p>
+    </div>
+  </div></section>
+</div>
+
+<script>
+/* ---------- ДАННЫЕ ---------- */
+const WORDS=[
+ {h:"家具",py:"jiājù",ru:"мебель",chars:[["家","jiā","семья, дом"],["具","jù","инструмент, прибор"]]},
+ {h:"花",py:"huā",ru:"цветок",chars:[["花","huā","цветок"]]},
+ {h:"花园",py:"huāyuán",ru:"сад",chars:[["花","huā","цветок"],["园","yuán","сад, парк"]]},
+ {h:"书桌",py:"shūzhuō",ru:"письменный стол",chars:[["书","shū","книга"],["桌","zhuō","стол"]]},
+ {h:"干净",py:"gānjìng",ru:"чистый",chars:[["干","gān","сухой"],["净","jìng","чистый"]]},
+ {h:"整齐",py:"zhěngqí",ru:"аккуратный",chars:[["整","zhěng","приводить в порядок"],["齐","qí","ровный"]]},
+ {h:"漂亮",py:"piàoliang",ru:"красивый",chars:[["漂","piào","красивый"],["亮","liàng","яркий"]]},
+ {h:"真",py:"zhēn",ru:"действительно",chars:[["真","zhēn","действительно"]]},
+ {h:"你们的",py:"nǐmen de",ru:"ваш",chars:[["你","nǐ","ты"],["们","men","суфф. мн.ч."],["的","de","принадлежность"]]}];
+
+const CHARS=[["干","gān",3,"сухой; чистый (в 干净)"],["净","jìng",8,"чистый"],["花","huā",7,"цветок"],
+ ["园","yuán",7,"сад"],["桌","zhuō",10,"стол"],["书","shū",4,"книга"],["家","jiā",10,"семья, дом"],
+ ["具","jù",8,"инструмент"],["整","zhěng",16,"порядок"],["齐","qí",6,"ровный"],["漂","piào",14,"красивый"],["真","zhēn",10,"действительно"]];
+
+/* ЛЕСЕНКИ: к каждому слову — цепочка словосочетаний от короткого к длинному */
+const LADDERS={
+ "家具":[["家具","jiājù","мебель"],["很多家具","hěn duō jiājù","много мебели"],["家里有很多家具","jiā lǐ yǒu hěn duō jiājù","в доме много мебели"],["我们家里有很多家具","wǒmen jiā lǐ yǒu hěn duō jiājù","в нашем доме много мебели"],["我们家的家具很干净","wǒmen jiā de jiājù hěn gānjìng","мебель в нашем доме очень чистая"]],
+ "花":[["花","huā","цветок"],["喜欢花","xǐhuan huā","любить цветы"],["妈妈喜欢花","māma xǐhuan huā","мама любит цветы"],["我妈妈喜欢花","wǒ māma xǐhuan huā","моя мама любит цветы"],["我爸爸、妈妈喜欢花","wǒ bàba māma xǐhuan huā","мои папа и мама любят цветы"]],
+ "花园":[["花园","huāyuán","сад"],["我家的花园","wǒ jiā de huāyuán","сад моего дома"],["我家的花园里","wǒ jiā de huāyuán lǐ","в саду моего дома"],["我家的花园里有很多花","wǒ jiā de huāyuán lǐ yǒu hěn duō huā","в саду моего дома много цветов"],["你家的花园真漂亮","nǐ jiā de huāyuán zhēn piàoliang","какой красивый у тебя сад!"]],
+ "书桌":[["书桌","shūzhuō","письменный стол"],["我的书桌","wǒ de shūzhuō","мой письменный стол"],["我的书桌上","wǒ de shūzhuō shàng","на моём письменном столе"],["书桌上","shūzhuō shàng","на письменном столе"],["我的书桌很干净","wǒ de shūzhuō hěn gānjìng","мой письменный стол очень чистый"]],
+ "干净":[["干净","gānjìng","чистый"],["很干净","hěn gānjìng","очень чистый"],["房间很干净","fángjiān hěn gānjìng","комната очень чистая"],["我的房间很干净","wǒ de fángjiān hěn gānjìng","моя комната очень чистая"],["我的书桌和房间都很干净","wǒ de shūzhuō hé fángjiān dōu hěn gānjìng","и мой стол, и комната очень чистые"]],
+ "整齐":[["整齐","zhěngqí","аккуратный"],["很整齐","hěn zhěngqí","очень аккуратный"],["书架很整齐","shūjià hěn zhěngqí","книжная полка аккуратная"],["我的书架很整齐","wǒ de shūjià hěn zhěngqí","моя книжная полка очень аккуратная"],["姐姐的书架很整齐","jiějie de shūjià hěn zhěngqí","полка сестры очень аккуратная"]],
+ "漂亮":[["漂亮","piàoliang","красивый"],["真漂亮","zhēn piàoliang","какой красивый!"],["花园真漂亮","huāyuán zhēn piàoliang","какой красивый сад!"],["你家的花园真漂亮","nǐ jiā de huāyuán zhēn piàoliang","какой красивый у тебя сад!"],["你家的花园真漂亮啊","nǐ jiā de huāyuán zhēn piàoliang a","как же красив твой сад!"]],
+ "真":[["真","zhēn","действительно"],["真漂亮","zhēn piàoliang","какой красивый"],["真整齐","zhēn zhěngqí","какой аккуратный"],["真干净","zhēn gānjìng","какой чистый"],["你家的花园真漂亮","nǐ jiā de huāyuán zhēn piàoliang","какой красивый у тебя сад!"]],
+ "你们的":[["你们","nǐmen","вы"],["你们的","nǐmen de","ваш"],["你们的学校","nǐmen de xuéxiào","ваша школа"],["你们的学校真漂亮","nǐmen de xuéxiào zhēn piàoliang","какая красивая ваша школа!"],["你们的学校和花园真漂亮","nǐmen de xuéxiào hé huāyuán zhēn piàoliang","какие красивые ваша школа и сад!"]]};
+
+const PLAN=[
+ ["0–10 мин","Разминка: повторить приветствия и 谢谢",10],
+ ["10–25 мин","Иероглифы урока: 12 знаков, ключи-радикалы",15],
+ ["25–55 мин","ЛЕСЕНКИ: словосочетания к каждому иероглифу + сборка",30],
+ ["55–70 мин","Прописи: письмо иероглифов 干 花 净 桌 真",15],
+ ["70–80 мин","Диалоги и чтение текста про комнату",10],
+ ["80–100 мин","Задания 1–5",20],
+ ["100–115 мин","Финальный тест",15],
+ ["115–120 мин","Итог и сертификат",5]];
+
+/* ---------- ОЗВУЧКА ---------- */
+function speak(t,rate){try{const u=new SpeechSynthesisUtterance(t);u.lang="zh-CN";u.rate=rate||.8;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+
+/* ---------- ТАЙМЕР ---------- */
+let total=120*60;
+setInterval(()=>{total=Math.max(0,total-1);const m=String(Math.floor(total/60)).padStart(2,"0"),s=String(total%60).padStart(2,"0");
+document.getElementById("clock").textContent="⏱ "+m+":"+s;},1000);
+
+/* ---------- ПЛАН ---------- */
+const planEl=document.getElementById("plan"),planList=document.getElementById("planList");
+PLAN.forEach(p=>{const s=document.createElement("span");s.textContent=p[0];s.title=p[1];s.onclick=()=>s.classList.toggle("done");planEl.appendChild(s);
+ const d=document.createElement("div");d.className="q";d.innerHTML='<div class="head">'+p[0]+' · '+p[1]+'</div>';planList.appendChild(d);});
+
+/* полоса иероглифов */
+const cs=document.getElementById("charsStrip");
+CHARS.forEach(c=>{const s=document.createElement("span");s.textContent=c[0];s.title=c[1]+" · "+c[3];s.onclick=()=>speak(c[0]);cs.appendChild(s);});
+
+/* ---------- ВКЛАДКИ ---------- */
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+ t.classList.add("active");document.getElementById(t.dataset.p).classList.add("active");});
+
+let progress=0;
+function addProg(n){progress=Math.min(100,progress+n);document.getElementById("progressFill").style.width=progress+"%";document.getElementById("progressPct").textContent=progress;}
+
+/* ---------- СЛОВАРЬ + РАЗБОР ИЕРОГЛИФОВ ---------- */
+const wg=document.getElementById("wordsGrid");
+WORDS.forEach((w,i)=>{const d=document.createElement("div");d.className="word";
+ d.innerHTML='<div class="hanzi">'+w.h+'</div><div class="py">'+w.py+'</div><div class="ru">'+w.ru+'</div><button class="speak-btn">🔊 Слушать</button>';
+ d.onclick=()=>speak(w.h);d.ondblclick=()=>showDecomp(i);wg.appendChild(d);});
+let decIdx=0;
+function showDecomp(i){decIdx=i;const w=WORDS[i];
+ document.getElementById("decomp-head").innerHTML="Разбор слова <b style='color:var(--purple)'>"+w.h+"</b> ("+w.py+"):";
+ document.getElementById("decomp-body").innerHTML=w.chars.map(c=>'<span class="chip" onclick="speak(\''+c[0]+'\')">'+c[0]+' <span class="py2">'+c[1]+' — '+c[2]+'</span></span>').join("");
+ document.getElementById("decomp-msg").textContent="Нажми на иероглиф, чтобы услышать его.";}
+showDecomp(0);
+
+/* флэшкарты */
+let flIdx=0;
+function newFlash(){flIdx=Math.floor(Math.random()*WORDS.length);const w=WORDS[flIdx];
+ document.getElementById("fl-head").innerHTML="Что значит <b style='color:var(--purple)'>"+w.h+"</b> ("+w.py+")?";
+ const opts=[w.ru];while(opts.length<4){const r=WORDS[Math.floor(Math.random()*WORDS.length)].ru;if(!opts.includes(r))opts.push(r);}
+ opts.sort(()=>Math.random()-.5);
+ document.getElementById("fl-opts").innerHTML=opts.map(o=>'<label class="opt" onclick="ansFlash(this,\''+o.replace(/'/g,"")+'\')">'+o+'</label>').join("");
+ document.getElementById("fl-msg").textContent="";}
+let flScore=0;
+function ansFlash(el,ans){const ok=ans===WORDS[flIdx].ru;
+ document.querySelectorAll("#fl-opts .opt").forEach(o=>{if(o.textContent===WORDS[flIdx].ru)o.classList.add("correct");});
+ if(ok){el.classList.add("correct");flScore++;if(flScore%5===0)addProg(4);}else el.classList.add("wrong");
+ document.getElementById("fl-msg").textContent=ok?"✅ Верно!":"❌ Правильно: "+WORDS[flIdx].ru;
+ setTimeout(newFlash,1300);}
+newFlash();
+
+/* ---------- ЛЕСЕНКИ ---------- */
+const wordPicker=document.getElementById("wordPicker");
+let curWord="花园",ladderScore=0,buildSeq=[],buildTarget=[];
+WORDS.forEach(w=>{const b=document.createElement("button");b.className="wp"+(w.h===curWord?" on":"");
+ b.innerHTML=w.h+'<small>'+w.py+'</small>';
+ b.onclick=()=>{curWord=w.h;document.querySelectorAll(".wp").forEach(x=>x.classList.remove("on"));b.classList.add("on");loadLadder();};
+ wordPicker.appendChild(b);});
+function loadLadder(){const L=LADDERS[curWord],sc=document.getElementById("staircase");sc.innerHTML="";
+ L.forEach((s,i)=>{const d=document.createElement("div");d.className="rung";
+  d.innerHTML='<span class="lvl">ступень '+(i+1)+'</span><span class="hz">'+s[0]+'</span><br><span class="meta">'+s[1]+'</span> · <span class="tr">'+s[2]+'</span>';
+  d.onclick=()=>speak(s[0],.75);sc.appendChild(d);});
+ document.getElementById("btnListenAll").onclick=()=>{L.forEach((s,i)=>setTimeout(()=>speak(s[0],.7),i*1600));};
+ /* игра-сборка */
+ buildSeq=[];buildTarget=L.map((s,i)=>i);
+ const shuffled=L.map((s,i)=>i).sort(()=>Math.random()-.5);
+ document.getElementById("buildZone").innerHTML='<span class="muted">Нажимай чипы от простого к сложному…</span>';
+ document.getElementById("buildMsg").textContent="";
+ document.getElementById("buildChips").innerHTML=shuffled.map(i=>'<span class="chip" onclick="pickChip(this,'+i+')">'+L[i][0]+' <span class="py2">'+L[i][1]+'</span></span>').join("");}
+function pickChip(el,i){if(el.style.opacity==="0.3")return;
+ const expect=buildSeq.length;
+ if(i===expect){buildSeq.push(i);el.style.opacity=".3";el.style.textDecoration="line-through";
+  const bz=document.getElementById("buildZone");
+  if(expect===0)bz.innerHTML="";
+  const s=LADDERS[curWord][i];const d=document.createElement("div");d.className="rung ok";d.style.marginLeft=(i*24)+"px";
+  d.innerHTML='<span class="lvl">'+(i+1)+'</span><span class="hz">'+s[0]+'</span> <span class="meta">'+s[1]+'</span> — <span class="tr">'+s[2]+'</span>';
+  bz.appendChild(d);speak(s[0],.75);
+  if(buildSeq.length===buildTarget.length){document.getElementById("buildMsg").innerHTML="🎉 Лесенка «"+curWord+"» собрана! +5 очков";ladderScore+=5;document.getElementById("ladderScore").textContent=ladderScore;addProg(5);}}
+ else{el.style.background="#fdecea";document.getElementById("buildMsg").textContent="❌ Не та ступень! Нужно: "+LADDERS[curWord][expect][0];
+  setTimeout(()=>el.style.background="",600);}}
+loadLadder();
+
+/* ---------- ПРОПИСИ ---------- */
+const charPicker=document.getElementById("charPicker");
+let curChar=0,steps=0;
+CHARS.forEach((c,i)=>{const b=document.createElement("button");b.className="wp"+(i===0?" on":"");
+ b.innerHTML=c[0]+'<small>'+c[1]+' · '+c[2]+' штр.</small>';
+ b.onclick=()=>{curChar=i;steps=0;document.querySelectorAll("#charPicker .wp").forEach((x,j)=>x.classList.toggle("on",j===i));loadChar();};
+ charPicker.appendChild(b);});
+function loadChar(){const c=CHARS[curChar];document.getElementById("sampleChar").textContent=c[0];
+ document.getElementById("infoChar").textContent=c[0]+" · "+c[1];
+ document.getElementById("infoPy").textContent=c[1];document.getElementById("infoRu").textContent=c[3];
+ document.getElementById("infoStrokes").textContent=c[2];
+ document.getElementById("stepCount").textContent="0 / "+c[2];clearCanvas();
+ document.getElementById("sampleChar").style.color="rgba(232,84,74,.18)";
+ const opts=[c[2]];const pool=[3,4,5,6,7,8,9,10,11,12,14,16];while(opts.length<4){const r=pool[Math.floor(Math.random()*pool.length)];if(!opts.includes(r))opts.push(r);}
+ opts.sort(()=>Math.random()-.5);
+ document.getElementById("strokeQuiz").innerHTML=opts.map(o=>'<label class="opt" onclick="ansStroke(this,'+o+','+c[2]+')">'+o+'</label>').join("");
+ document.getElementById("strokeMsg").textContent="";}
+function ansStroke(el,n,st){document.querySelectorAll("#strokeQuiz .opt").forEach(o=>o.style.pointerEvents="none");
+ if(n===st){el.classList.add("correct");document.getElementById("strokeMsg").textContent="✅ Верно!";addProg(1);ladderScore++;document.getElementById("ladderScore").textContent=ladderScore;}
+ else{el.classList.add("wrong");document.getElementById("strokeMsg").textContent="❌ В нём "+st+" штрихов.";}
+ setTimeout(()=>document.querySelectorAll("#strokeQuiz .opt").forEach(o=>o.style.pointerEvents="auto"),1500);}
+const cv=document.getElementById("traceCanvas"),ctx=cv.getContext("2d");
+document.getElementById("btnStep").onclick=()=>{const st=CHARS[curChar][2];if(steps<st){steps++;
+ document.getElementById("stepCount").textContent=steps+" / "+st;
+ document.getElementById("sampleChar").style.color="rgba(232,84,74,"+(0.18+0.8*steps/st)+")";
+ if(steps===st){addProg(2);ladderScore+=2;document.getElementById("ladderScore").textContent=ladderScore;speak(CHARS[curChar][0]);}}};
+function clearCanvas(){ctx.clearRect(0,0,260,260);}
+let drawing=false;
+function pos(e){const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*(260/r.width),(t.clientY-r.top)*(260/r.height)];}
+function start(e){drawing=true;const[x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y);e.preventDefault();}
+function move(e){if(!drawing)return;const[x,y]=pos(e);ctx.lineWidth=9;ctx.lineCap="round";ctx.strokeStyle="#3d2c29";ctx.lineTo(x,y);ctx.stroke();e.preventDefault();}
+function end(){drawing=false;}
+cv.addEventListener("mousedown",start);cv.addEventListener("mousemove",move);window.addEventListener("mouseup",end);
+cv.addEventListener("touchstart",start,{passive:false});cv.addEventListener("touchmove",move,{passive:false});cv.addEventListener("touchend",end);
+loadChar();
+
+/* ---------- ЗАДАНИЯ ---------- */
+let taskScore=0;
+/* 1. соотношение */
+const MATCH=[["花","flower"],["书桌","desk"],["花园","garden"],["家具","furniture"],["干净","clean"],["整齐","tidy, neat"],["漂亮","beautiful"],["真","really"]];
+let selCn=null,selEn=null,matched=0;
+function renderMatch(){
+ const cn=[...MATCH].sort(()=>Math.random()-.5),en=[...MATCH].sort(()=>Math.random()-.5);
+ document.getElementById("matchCn").innerHTML=cn.map(m=>'<div class="match-item" data-w="'+m[0]+'" onclick="pickCn(this)">'+m[0]+'</div>').join("");
+ document.getElementById("matchEn").innerHTML=en.map(m=>'<div class="match-item" data-w="'+m[0]+'" onclick="pickEn(this)">'+m[1]+'</div>').join("");}
+function pickCn(el){if(el.classList.contains("ok"))return;document.querySelectorAll("#matchCn .match-item").forEach(x=>x.classList.remove("sel"));el.classList.add("sel");selCn=el;tryPair();}
+function pickEn(el){if(el.classList.contains("ok"))return;document.querySelectorAll("#matchEn .match-item").forEach(x=>x.classList.remove("sel"));el.classList.add("sel");selEn=el;tryPair();}
+function tryPair(){if(!selCn||!selEn)return;
+ if(selCn.dataset.w===selEn.dataset.w){selCn.classList.add("ok");selEn.classList.add("ok");selCn.classList.remove("sel");selEn.classList.remove("sel");matched++;taskScore++;
+  if(matched===8){document.getElementById("matchMsg").innerHTML="✅ Все пары найдены! +8";addProg(8);}}
+ else{selCn.classList.remove("sel");selEn.classList.remove("sel");}
+ document.getElementById("taskScore").textContent=taskScore;selCn=selEn=null;}
+renderMatch();
+/* 2. ✓✗ */
+const TF=[["В саду моего дома много цветов。",true],["В гостиной моего дома много цветов。",false],
+ ["На письменном столе много книг。",false],["На книжной полке много книг。",true],
+ ["В комнате есть кровать, письменный стол, стул и книжная полка。",true],
+ ["На книжной полке есть компьютер。",false],["Моя книжная полка аккуратная。",true],["Моя комната очень грязная。",false]];
+let tfDone=0;
+TF.forEach((q,i)=>{const d=document.createElement("div");d.className="q";
+ d.innerHTML='<div class="head">'+(i+1)+'. '+q[0]+'</div><label class="opt" onclick="ansTF(this,'+q[1]+',true)">✓ Правда</label><label class="opt" onclick="ansTF(this,'+q[1]+',false)">✗ Неправда</label><p class="tfm"></p>';
+ document.getElementById("quizTF").appendChild(d);});
+function ansTF(el,truth,user){el.parentElement.querySelectorAll(".opt").forEach(o=>o.style.pointerEvents="none");
+ const ok=truth===user;const msg=el.parentElement.querySelector(".tfm");
+ if(ok){el.classList.add("correct");taskScore++;msg.textContent="✅ Верно!";}else{el.classList.add("wrong");msg.textContent="❌ Правильно: "+(truth?"✓":"✗");}
+ document.getElementById("taskScore").textContent=taskScore;tfDone++;if(tfDone===8)addProg(8);}
+/* 3. перевод */
+const TRANS=[["Наша школа очень большая и чистая。","我们的学校很大，很干净。",["我们的学校很大，很干净。","我们家有很多家具。","我的书架很整齐。"]],
+ ["На моей книжной полке много книг。","我的书架上有很多书。",["我的书架上有很多书。","我的书桌上有很多书。","我的花园里有很多花。"]],
+ ["Мебель в нашем доме чистая и красивая。","我们家的家具很干净，也很漂亮。",["我们家的家具很干净，也很漂亮。","我们家的花园很干净，也很漂亮。","我的房间很干净，也很漂亮。"]]];
+TRANS.forEach((q,i)=>{const d=document.createElement("div");d.className="q";
+ d.innerHTML='<div class="head">'+(i+1)+'. '+q[0]+'</div>'+q[2].map(o=>'<label class="opt" onclick="ansTrans(this,\''+o+'\',\''+q[1]+'\')">'+o+'</label>').join("")+'<p class="trm"></p>';
+ document.getElementById("quizTrans").appendChild(d);});
+function ansTrans(el,ans,corr){el.parentElement.querySelectorAll(".opt").forEach(o=>o.style.pointerEvents="none");
+ const ok=ans===corr;const msg=el.parentElement.querySelector(".trm");
+ if(ok){el.classList.add("correct");taskScore++;msg.textContent="✅ Верно!";}else{el.classList.add("wrong");msg.textContent="❌ Правильно: "+corr;}
+ document.getElementById("taskScore").textContent=taskScore;}
+/* 4. порядок слов */
+const ORDER=[["Моя комната очень чистая。",["我","的","房间","很","干净"]],
+ ["В саду моего дома много цветов。",["我","家","的","花园","里","有","很","多","花"]],
+ ["Какой красивый у тебя сад!",["你","家","的","花园","真","漂亮"]]];
+ORDER.forEach((q,qi)=>{const d=document.createElement("div");d.className="q";
+ const sh=q[1].map((c,i)=>[c,i]).sort(()=>Math.random()-.5);
+ d.innerHTML='<div class="head">'+(qi+1)+'. Собери: '+q[0]+'</div><div class="build-zone" id="oz'+qi+'"><span class="muted">Сюда — в правильном порядке…</span></div>'
+ +sh.map(x=>'<span class="chip" onclick="ordChip(this,'+qi+',\''+x[0]+'\','+x[1]+')">'+x[0]+'</span>').join("")+'<p id="om'+qi+'"></p>';
+ document.getElementById("quizOrder").appendChild(d);});
+let ordProg=[0,0,0];
+function ordChip(el,qi,c,idx){if(el.style.opacity==="0.3")return;
+ const seq=ORDER[qi][1];let n=ordProg[qi];
+ if(idx===n){el.style.opacity=".3";const z=document.getElementById("oz"+qi);if(n===0)z.innerHTML="";
+  const s=document.createElement("span");s.className="chip";s.style.pointerEvents="none";s.textContent=c;z.appendChild(s);ordProg[qi]++;
+  if(ordProg[qi]===seq.length){document.getElementById("om"+qi).textContent="✅ Собрано!";speak(seq.join(""),.75);taskScore+=2;document.getElementById("taskScore").textContent=taskScore;}}
+ else{el.style.background="#fdecea";setTimeout(()=>el.style.background="",500);}}
+/* 5. вставки */
+function norm(s){return (s||"").trim().replace(/\s+/g,"");}
+function checkFill3(){const a=norm(f31.value),b=norm(f32.value);const ok=a==="房间"&&b==="书架";
+ fillMsg3.innerHTML=ok?"✅ Верно: 这是我的房间。你的书架真整齐！":"❌ Подсказка: 房间 fángjiān, 书架 shūjià.";if(ok){taskScore+=2;addProg(3);}taskScore_el();}
+function checkFill4(){const a=norm(f41.value),b=norm(f42.value);const ok=(a==="你家的花园真漂亮"||a==="你家的花园真漂亮！")&&(b==="谢谢"||b==="谢谢！");
+ fillMsg4.innerHTML=ok?"✅ Верно！":"❌ Подсказка: 你家的花园真漂亮！ / 谢谢！";if(ok){taskScore+=2;addProg(3);}taskScore_el();}
+function taskScore_el(){document.getElementById("taskScore").textContent=taskScore;}
+
+/* ---------- ФИНАЛ ---------- */
+const FINAL=[["Выбери перевод слова 整齐",["аккуратный","цветок","красивый","стол"],0],
+ ["Выбери перевод слова 书桌",["кровать","письменный стол","мебель","сад"],1],
+ ["Как сказать «Какой красивый у тебя сад!»?",["你家的花园真漂亮！","我的房间很干净。","书架上有很多书。","我喜欢我们家。"],0],
+ ["Сколько штрихов в иероглифе 花?",["5","6","7","8"],2],
+ ["Что значит 真 в 你家的花园真漂亮？",["очень","действительно, какой","внутри","на"],1],
+ ["Выбери правильное: «На письменном столе есть компьютер»",["书桌上有电脑。","书架上有电脑。","房间里有电脑花。","花园里有电脑。"],0],
+ ["Какой радикал (ключ) в иероглифах 花 и 园?",["木","氵","艹","宀"],2],
+ ["Собери слово «сад»",null,0,"花园"],
+ ["Сколько штрихов в иероглифе 真?",["8","9","10","11"],2],
+ ["Выбери перевод: 我的书架很整齐。",["Моя книжная полка очень аккуратная。","Мой письменный стол очень чистый。","Моя комната очень красивая。","Моя школа очень большая。"],0],
+ ["Что значит 你们的？",["мой","твой","ваш","их"],2],
+ ["Какой ответ на «你家的花园真漂亮！」?",["不客气","谢谢！","再见！","你好！"],1]];
+const fq=document.getElementById("finalQuiz");let fScore=0;
+FINAL.forEach((q,i)=>{const d=document.createElement("div");d.className="q";
+ if(q[3]){ /* сборка из иероглифов */
+  const chars=q[3].split("").map((c,idx)=>[c,idx]).sort(()=>Math.random()-.5);
+  d.innerHTML='<div class="head">'+(i+1)+'. '+q[0]+'</div><div class="build-zone" id="fz"><span class="muted">Собери слово…</span></div>'
+  +chars.map(x=>'<span class="chip" onclick="finChip(this,\''+x[0]+'\','+x[1]+')">'+x[0]+'</span>').join("")+'<p class="fm"></p>';}
+ else{d.innerHTML='<div class="head">'+(i+1)+'. '+q[0]+'</div>'+q[1].map((o,j)=>'<label class="opt" onclick="ansF(this,'+j+','+q[2]+')">'+o+'</label>').join("")+'<p class="fm"></p>';}
+ fq.appendChild(d);});
+let finN=0;
+function finChip(el,c,idx){if(el.style.opacity==="0.3")return;const w="花园";
+ if(w[finN]===c){el.style.opacity=".3";const z=document.getElementById("fz");if(finN===0)z.innerHTML="";
+  const s=document.createElement("span");s.className="chip";s.style.pointerEvents="none";s.textContent=c;z.appendChild(s);finN++;
+  if(finN===2){z.querySelector(".fm");fScore++;document.getElementById("finalScore").textContent=fScore;document.getElementById("fz").parentElement.querySelector(".fm").textContent="✅ 花园 — сад!";speak("花园");checkCert();}}
+ else{el.style.background="#fdecea";setTimeout(()=>el.style.background="",500);}}
+function ansF(el,j,corr){el.parentElement.querySelectorAll(".opt").forEach(o=>o.style.pointerEvents="none");
+ const ok=j===corr;const msg=el.parentElement.querySelector(".fm");
+ if(ok){el.classList.add("correct");fScore++;msg.textContent="✅";}else{el.classList.add("wrong");msg.textContent="❌";}
+ document.getElementById("finalScore").textContent=fScore;checkCert();}
+function checkCert(){if(fScore>=10){document.getElementById("cert").style.display="block";addProg(30);}}
+</script>
+</body>
+</html>
